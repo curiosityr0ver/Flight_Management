@@ -39,9 +39,7 @@ const FlightTable = ({ flights, airports, filters, setFilters }) => {
 		});
 	};
 
-	const data = useMemo(() => {
-		return flights;
-	}, [flights]);
+	const data = useMemo(() => flights, [flights]);
 
 	const columns = useMemo(
 		() => [
@@ -102,9 +100,10 @@ const FlightTable = ({ flights, airports, filters, setFilters }) => {
 		state: { sortBy },
 	} = useTable({ columns, data }, useSortBy);
 
-	const uniqueAirports = useMemo(() => {
-		return airports.map((airport) => airport.code);
-	}, [airports]);
+	const uniqueAirports = useMemo(
+		() => airports.map((airport) => airport.code),
+		[airports]
+	);
 
 	const getSortIcon = (column) => {
 		const isSorted = column.isSorted;
