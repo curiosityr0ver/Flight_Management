@@ -1,0 +1,10 @@
+.flight-date {
+    background-color: green !important;
+    color: white !important;
+    border-radius: 50%;
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    text-align: center;
+}

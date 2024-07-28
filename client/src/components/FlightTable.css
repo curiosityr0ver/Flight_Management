@@ -1,0 +1,58 @@
+.flight-table-container {
+    max-width: 1200px;
+    margin: auto;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chakra-input {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+}
+
+.flight-table th {
+    background: #f5f5f7;
+    color: #000000;
+    font-weight: 600;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.flight-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #000000;
+}
+
+.flight-table tr:nth-of-type(even) {
+    background: #f9f9f9;
+}
+
+.flight-table tr:hover {
+    background: #e0e0e0;
+}
+
+.flight-table th:hover {
+    cursor: pointer;
+    background: #e0e0e0;
+}
+
+.flight-table .on-time {
+    background: #d1f7c4;
+    /* light green */
+}
+
+.flight-table .delayed {
+    background: #ffe4e4;
+    /* light red */
+}
+
+.flight-table .cancelled {
+    background: #ffedd5;
+    /* light orange */
+}

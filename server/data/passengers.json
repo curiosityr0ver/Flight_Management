@@ -1,0 +1,10 @@
+[
+    { "id": "P001", "name": "Alice Johnson", "flightId": "FL1234" },
+    { "id": "P002", "name": "Bob Smith", "flightId": "FL1234" },
+    { "id": "P003", "name": "Charlie Davis", "flightId": "FL5678" },
+    { "id": "P004", "name": "David Gonzalez", "flightId": "FL5678" },
+    { "id": "P005", "name": "Eve Thompson", "flightId": "FL9101" },
+    { "id": "P001", "name": "Frank Wilson", "flightId": "FL9101" },
+    { "id": "P007", "name": "Grace Lee", "flightId": "FL1123" },
+    { "id": "P008", "name": "Hannah Martinez", "flightId": "FL1123" }
+]
