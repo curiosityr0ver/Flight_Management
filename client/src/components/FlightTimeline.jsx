@@ -15,20 +15,21 @@ import "./FlightTimeline.css"; // Import your CSS file for custom styles
 
 const FlightTimeline = ({ flights, airport, date }) => {
 	const selectedDate = date ? new Date(date) : new Date();
-	const selectedAirport = airport;
+	const selectedAirportCode = airport?.code;
+	const runways = airport?.runways || [];
 
 	const filteredFlights = useMemo(() => {
-		if (!selectedAirport) return [];
+		if (!selectedAirportCode) return [];
 
 		const dateString = format(selectedDate, "yyyy-MM-dd");
 
 		return flights
 			.filter(
 				(flight) =>
-					(flight.departureAirport === selectedAirport &&
+					(flight.departureAirport === selectedAirportCode &&
 						format(new Date(flight.departureTime), "yyyy-MM-dd") ===
 							dateString) ||
-					(flight.arrivalAirport === selectedAirport &&
+					(flight.arrivalAirport === selectedAirportCode &&
 						format(new Date(flight.arrivalTime), "yyyy-MM-dd") === dateString)
 			)
 			.map((flight) => {
@@ -45,36 +46,36 @@ const FlightTimeline = ({ flights, airport, date }) => {
 
 				return {
 					...flight,
-					isDeparture: flight.departureAirport === selectedAirport,
+					isDeparture: flight.departureAirport === selectedAirportCode,
 					scheduledTime:
-						flight.departureAirport === selectedAirport
+						flight.departureAirport === selectedAirportCode
 							? departureTime
 							: arrivalTime,
 					actualTime:
-						flight.departureAirport === selectedAirport
+						flight.departureAirport === selectedAirportCode
 							? departureTimeWithDelay
 							: arrivalTimeWithDelay,
 					relevantRunway:
-						flight.departureAirport === selectedAirport
+						flight.departureAirport === selectedAirportCode
 							? flight.departureRunway
 							: flight.arrivalRunway,
 					x:
-						(flight.departureAirport === selectedAirport
+						(flight.departureAirport === selectedAirportCode
 							? departureTimeWithDelay
 							: arrivalTimeWithDelay
 						).getHours() +
-						(flight.departureAirport === selectedAirport
+						(flight.departureAirport === selectedAirportCode
 							? departureTimeWithDelay
 							: arrivalTimeWithDelay
 						).getMinutes() /
 							60,
 					y:
-						flight.departureAirport === selectedAirport
+						flight.departureAirport === selectedAirportCode
 							? flight.departureRunway
 							: flight.arrivalRunway,
 				};
 			});
-	}, [flights, selectedAirport, selectedDate]);
+	}, [flights, selectedAirportCode, selectedDate]);
 
 	const CustomTooltip = ({ active, payload }) => {
 		if (active && payload && payload.length) {
@@ -100,6 +101,11 @@ const FlightTimeline = ({ flights, airport, date }) => {
 						</strong>{" "}
 						{format(new Date(flight.actualTime), "hh:mm a")}
 					</p>
+					{flight.delay > 0 && (
+						<p>
+							<strong>Delay:</strong> {flight.delay} minutes
+						</p>
+					)}
 					<p>
 						<strong>Runway:</strong> {flight.relevantRunway}
 					</p>
@@ -112,7 +118,7 @@ const FlightTimeline = ({ flights, airport, date }) => {
 		return null;
 	};
 
-	if (!selectedAirport) {
+	if (!selectedAirportCode) {
 		return (
 			<Box className="flight-schedule">
 				<Text>Please select an airport to view its schedule.</Text>
@@ -142,7 +148,7 @@ const FlightTimeline = ({ flights, airport, date }) => {
 					fontSize="2xl"
 					fontWeight="bold"
 					mb="4"
-				>{`Flight Schedule for ${selectedAirport} on ${format(
+				>{`Flight Schedule for ${selectedAirportCode} on ${format(
 					selectedDate,
 					"PPP"
 				)}`}</Text>
@@ -173,6 +179,7 @@ const FlightTimeline = ({ flights, airport, date }) => {
 						name="Runway"
 						tickLine={false}
 						tick={{ fontSize: 14, fontWeight: "bold" }}
+						allowDuplicatedCategory={false}
 					/>
 					<Tooltip content={<CustomTooltip />} />
 					<Legend />

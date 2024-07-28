@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+/* eslint-disable react/prop-types */
+import { useMemo } from "react";
 import {
 	Box,
 	Table,
@@ -7,38 +8,15 @@ import {
 	Tr,
 	Th,
 	Td,
-	Select,
-	Button,
 	Flex,
 	Heading,
-	Input,
 } from "@chakra-ui/react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { useTable, useSortBy } from "react-table";
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import { format, addMinutes } from "date-fns";
 import "./FlightTable.css";
 
-const FlightTable = ({ flights, airports, filters, setFilters }) => {
-	const { airport, direction, date, search } = filters;
-
-	const handleFilterChange = (key, value) => {
-		setFilters((prevFilters) => ({
-			...prevFilters,
-			[key]: value,
-		}));
-	};
-
-	const clearFilters = () => {
-		setFilters({
-			airport: "",
-			direction: "",
-			date: null,
-			search: "",
-		});
-	};
-
+const FlightTable = ({ flights }) => {
 	const data = useMemo(() => flights, [flights]);
 
 	const columns = useMemo(
@@ -91,19 +69,8 @@ const FlightTable = ({ flights, airports, filters, setFilters }) => {
 		[]
 	);
 
-	const {
-		getTableProps,
-		getTableBodyProps,
-		headerGroups,
-		rows,
-		prepareRow,
-		state: { sortBy },
-	} = useTable({ columns, data }, useSortBy);
-
-	const uniqueAirports = useMemo(
-		() => airports.map((airport) => airport.code),
-		[airports]
-	);
+	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+		useTable({ columns, data }, useSortBy);
 
 	const getSortIcon = (column) => {
 		const isSorted = column.isSorted;
@@ -129,51 +96,6 @@ const FlightTable = ({ flights, airports, filters, setFilters }) => {
 			<Heading as="h2" size="lg" mb={4} textAlign="center">
 				Flight Information
 			</Heading>
-			<Flex mb={4} align="center" justify="space-between" wrap="wrap">
-				<Select
-					placeholder="Filter by Airport"
-					value={airport}
-					onChange={(e) => handleFilterChange("airport", e.target.value)}
-					width="20%"
-					mb={2}
-				>
-					{uniqueAirports.map((airport) => (
-						<option key={airport} value={airport}>
-							{airport}
-						</option>
-					))}
-				</Select>
-				{airport && (
-					<Select
-						placeholder="Show All"
-						value={direction}
-						onChange={(e) => handleFilterChange("direction", e.target.value)}
-						width="20%"
-						mb={2}
-					>
-						<option value="">Show All</option>
-						<option value="departures">Departures Only</option>
-						<option value="arrivals">Arrivals Only</option>
-					</Select>
-				)}
-				<DatePicker
-					selected={date}
-					onChange={(date) => handleFilterChange("date", date)}
-					placeholderText="Filter by Date"
-					className="chakra-input"
-					style={{ width: "20%", marginBottom: "8px" }}
-				/>
-				<Input
-					placeholder="Search by Flight No or Airline"
-					value={search}
-					onChange={(e) => handleFilterChange("search", e.target.value)}
-					width="20%"
-					mb={2}
-				/>
-				<Button onClick={clearFilters} colorScheme="teal" mb={2}>
-					Clear Filters
-				</Button>
-			</Flex>
 			<Box overflowX="auto">
 				<Table
 					{...getTableProps()}
@@ -182,10 +104,13 @@ const FlightTable = ({ flights, airports, filters, setFilters }) => {
 					colorScheme="gray"
 				>
 					<Thead>
-						{headerGroups.map((headerGroup) => (
-							<Tr {...headerGroup.getHeaderGroupProps()}>
-								{headerGroup.headers.map((column) => (
-									<Th {...column.getHeaderProps(column.getSortByToggleProps())}>
+						{headerGroups.map((headerGroup, index) => (
+							<Tr key={index} {...headerGroup.getHeaderGroupProps()}>
+								{headerGroup.headers.map((column, index) => (
+									<Th
+										key={index}
+										{...column.getHeaderProps(column.getSortByToggleProps())}
+									>
 										<Flex align="center">
 											{column.render("Header")}
 											<Box as="span" ml={2}>
@@ -198,12 +123,18 @@ const FlightTable = ({ flights, airports, filters, setFilters }) => {
 						))}
 					</Thead>
 					<Tbody {...getTableBodyProps()}>
-						{rows.map((row) => {
+						{rows.map((row, index) => {
 							prepareRow(row);
 							return (
-								<Tr {...row.getRowProps()} className={row.original.status}>
-									{row.cells.map((cell) => (
-										<Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
+								<Tr
+									key={index}
+									{...row.getRowProps()}
+									className={row.original.status}
+								>
+									{row.cells.map((cell, index) => (
+										<Td key={index} {...cell.getCellProps()}>
+											{cell.render("Cell")}
+										</Td>
 									))}
 								</Tr>
 							);

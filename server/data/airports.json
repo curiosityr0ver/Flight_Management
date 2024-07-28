@@ -38,5 +38,34 @@
         "code": "DEN",
         "name": "Denver International Airport",
         "runways": ["7L", "7R", "8", "16L", "16R", "17L", "17R", "25L", "25R", "26", "34L", "34R", "35L", "35R"]
+    },
+    {
+        "code": "MSP",
+        "name": "Minneapolis-Saint Paul International Airport",
+        "runways": ["4/22", "12L", "12R", "17/35"]
+        
+    },
+    {
+        "code": "YYZ",
+        "name": "Toronto Pearson International Airport",
+        "runways": ["5/23", "6L/24R", "6R/24L", "15L/33R", "15R/33L"]
+
+    },
+    {
+        "code": "TPA",
+        "name": "Tampa International Airport",
+        "runways": ["1L/19R", "1R/19L", "10/28"]
+
+    },
+    {
+        "code": "SYD",
+        "name": "Sydney Kingsford Smith International Airport",
+        "runways": ["7/25", "16L/34R", "16R/34L"]
+
+    },
+    {
+        "code": "PHX",
+        "name": "Phoenix Sky Harbor International Airport",
+        "runways": ["7L", "7R", "8", "25L", "25R", "26"]
     }
 ]
