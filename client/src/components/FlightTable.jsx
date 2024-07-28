@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
 	Box,
 	Table,
@@ -20,61 +20,28 @@ import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import { format, addMinutes } from "date-fns";
 import "./FlightTable.css";
 
-const FlightTable = ({ flights, airports }) => {
-	const [airportFilter, setAirportFilter] = useState("");
-	const [directionFilter, setDirectionFilter] = useState("");
-	const [dateFilter, setDateFilter] = useState(null);
-	const [searchQuery, setSearchQuery] = useState("");
+const FlightTable = ({ flights, airports, filters, setFilters }) => {
+	const { airport, direction, date, search } = filters;
 
-	const clearFilters = () => {
-		setAirportFilter("");
-		setDirectionFilter("");
-		setDateFilter(null);
-		setSearchQuery("");
+	const handleFilterChange = (key, value) => {
+		setFilters((prevFilters) => ({
+			...prevFilters,
+			[key]: value,
+		}));
 	};
 
-	const filteredData = useMemo(() => {
-		let filteredFlights = flights;
+	const clearFilters = () => {
+		setFilters({
+			airport: "",
+			direction: "",
+			date: null,
+			search: "",
+		});
+	};
 
-		if (airportFilter) {
-			filteredFlights = filteredFlights.filter(
-				(flight) =>
-					flight.departureAirport === airportFilter ||
-					flight.arrivalAirport === airportFilter
-			);
-		}
-
-		if (directionFilter && airportFilter) {
-			filteredFlights = filteredFlights.filter((flight) => {
-				if (directionFilter === "departures") {
-					return flight.departureAirport === airportFilter;
-				} else if (directionFilter === "arrivals") {
-					return flight.arrivalAirport === airportFilter;
-				}
-				return true;
-			});
-		}
-
-		if (dateFilter) {
-			filteredFlights = filteredFlights.filter((flight) => {
-				const flightDate = new Date(flight.departureTime).toDateString();
-				return flightDate === dateFilter.toDateString();
-			});
-		}
-
-		if (searchQuery) {
-			const lowerCaseQuery = searchQuery.toLowerCase();
-			filteredFlights = filteredFlights.filter(
-				(flight) =>
-					flight.flightNumber.toLowerCase().includes(lowerCaseQuery) ||
-					flight.airline.toLowerCase().includes(lowerCaseQuery)
-			);
-		}
-
-		return filteredFlights;
-	}, [flights, airportFilter, directionFilter, dateFilter, searchQuery]);
-
-	const data = useMemo(() => filteredData, [filteredData]);
+	const data = useMemo(() => {
+		return flights;
+	}, [flights]);
 
 	const columns = useMemo(
 		() => [
@@ -166,8 +133,8 @@ const FlightTable = ({ flights, airports }) => {
 			<Flex mb={4} align="center" justify="space-between" wrap="wrap">
 				<Select
 					placeholder="Filter by Airport"
-					value={airportFilter}
-					onChange={(e) => setAirportFilter(e.target.value)}
+					value={airport}
+					onChange={(e) => handleFilterChange("airport", e.target.value)}
 					width="20%"
 					mb={2}
 				>
@@ -177,11 +144,11 @@ const FlightTable = ({ flights, airports }) => {
 						</option>
 					))}
 				</Select>
-				{airportFilter && (
+				{airport && (
 					<Select
 						placeholder="Show All"
-						value={directionFilter}
-						onChange={(e) => setDirectionFilter(e.target.value)}
+						value={direction}
+						onChange={(e) => handleFilterChange("direction", e.target.value)}
 						width="20%"
 						mb={2}
 					>
@@ -191,16 +158,16 @@ const FlightTable = ({ flights, airports }) => {
 					</Select>
 				)}
 				<DatePicker
-					selected={dateFilter}
-					onChange={(date) => setDateFilter(date)}
+					selected={date}
+					onChange={(date) => handleFilterChange("date", date)}
 					placeholderText="Filter by Date"
 					className="chakra-input"
 					style={{ width: "20%", marginBottom: "8px" }}
 				/>
 				<Input
 					placeholder="Search by Flight No or Airline"
-					value={searchQuery}
-					onChange={(e) => setSearchQuery(e.target.value)}
+					value={search}
+					onChange={(e) => handleFilterChange("search", e.target.value)}
 					width="20%"
 					mb={2}
 				/>
