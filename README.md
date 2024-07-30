@@ -31,13 +31,13 @@ This project is a fully functional Air Traffic Control (ATC) system that allows 
 
    ```bash
    git clone https://github.com/curiosityr0ver/Flight_Management
-   cd air-traffic-control
+   cd ./server
    ```
 
 2. **Backend Setup**:
 
    ```bash
-   cd server
+   cd ./server
    npm install
    npm start
    ```
