@@ -199,8 +199,8 @@ const Dashboard = ({ airports }) => {
 		<Box p={5}>
 			<Heading mb={5}>
 				{type === "create" ? "Create Flight" : "Update Flight"}
-				<Button>
-					<Button onClick={() => navigate("/")}>Back to Flights</Button>
+				<Button ml={5} onClick={() => navigate("/")}>
+					Back to Flights
 				</Button>
 			</Heading>
 			<form onSubmit={handleSubmit}>
