@@ -16,7 +16,7 @@ const sendFlightUpdateEmail = async (subject, flightDetails, HTMLformattedFlight
         // Email options
         let mailOptions = {
             from: process.env.EMAIL_USER,
-            bcc: recipients,
+            cc: recipients,
             subject,
             html: HTMLformattedFlightDetails,
         };
