@@ -4,6 +4,9 @@ const { flightSchema } = require('../utils/schemas');
 const { validateFlight } = require('../utils/validation');
 let flights = require('../data/flights');
 let passengers = require('../data/passengers'); // Assuming you have a passengers data file
+const nodemailer = require('nodemailer');
+const { authMiddleWare } = require('../middleware/authMiddleWare');
+const { sendFlightUpdateEmail } = require('../utils/emailUtils');
 
 const generateFlightId = () => {
     const idPrefix = 'FL';
@@ -52,7 +55,7 @@ router.get('/:id', (req, res) => {
     }
 });
 
-router.post('/', (req, res) => {
+router.post('/', authMiddleWare, (req, res) => {
     const newFlight = req.body;
     newFlight.id = generateFlightId();
 
@@ -61,19 +64,42 @@ router.post('/', (req, res) => {
         return res.status(400).json({ error: error.details[0].message });
     }
 
-    const conflictResult = validateFlight(newFlight);
-    if (conflictResult) {
-        return res.status(400).json(conflictResult);
-    }
-
     flights.push(newFlight);
     res.status(201).json(newFlight);
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', authMiddleWare, async (req, res) => {
+    const { arrivalAirport, departureAirport, delay, arrivalRunway, departureRunway, status, passengers } = req.body;
     const flightId = req.params.id;
-    const updatedFlight = req.body;
-    updatedFlight.id = flightId;
+    const currentFlight = flights.find(f => f.id === flightId);
+
+    if (!currentFlight) {
+        return res.status(404).json({ error: 'Flight not found' });
+    }
+
+    let updatedFlight = {
+        ...currentFlight,
+        arrivalAirport: arrivalAirport || currentFlight.arrivalAirport,
+        departureAirport: departureAirport || currentFlight.departureAirport,
+        delay: delay || currentFlight.delay,
+        arrivalRunway: arrivalRunway || currentFlight.arrivalRunway,
+        departureRunway: departureRunway || currentFlight.departureRunway,
+        status: status || currentFlight.status,
+        passengers: passengers || currentFlight.passengers
+    };
+
+    if (delay && delay > 0) {
+        const arrivalTime = new Date(currentFlight.arrivalTime);
+        const departureTime = new Date(currentFlight.departureTime);
+        arrivalTime.setMinutes(arrivalTime.getMinutes() + delay);
+        departureTime.setMinutes(departureTime.getMinutes() + delay);
+        updatedFlight = {
+            ...updatedFlight, arrivalTime, departureTime,
+            status: 'delayed'
+        };
+
+    }
+
 
     const { error } = flightSchema.validate(updatedFlight);
     if (error) {
@@ -81,27 +107,25 @@ router.put('/:id', (req, res) => {
     }
 
     const conflictResult = validateFlight(updatedFlight);
-    if (conflictResult) {
+    if (conflictResult.conflict) {
         return res.status(400).json(conflictResult);
     }
 
-    const index = flights.findIndex(flight => flight.id === flightId);
-    if (index === -1) {
-        return res.status(404).json({ error: 'Flight not found' });
-    }
-
+    const index = flights.findIndex(f => f.id === flightId);
     flights[index] = updatedFlight;
-    res.json(updatedFlight);
-});
+    console.log("heree 3", delay);
 
-router.delete('/:id', (req, res) => {
-    const index = flights.findIndex(f => f.id === req.params.id);
-    if (index !== -1) {
-        const deletedFlight = flights.splice(index, 1)[0];
-        res.json(deletedFlight);
-    } else {
-        res.status(404).json({ error: 'Flight not found' });
+    if (delay || status || arrivalAirport || departureAirport) {
+        const subject = `Flight ${flightId} Update`;
+        const flightDetails = `Flight ${flightId} has been updated.\nStatus: ${status || updatedFlight.status},\nDelay: ${delay || updatedFlight.delay} minutes,\nArrival airport: ${arrivalAirport || updatedFlight.arrivalAirport},\nDeparture airport: ${departureAirport || updatedFlight.departureAirport}`;
+        const HTMLformattedFlightDetails = `<h1>Flight ${flightId} Update</h1><p>Flight ${flightId} has been updated.</p><ul><li><b>Status:</b> ${status || updatedFlight.status}</li><li><b>Delay:</b> ${delay || updatedFlight.delay} minutes</li><li><b>Arrival Airport:</b> ${arrivalAirport || updatedFlight.arrivalAirport}</li><li><b>Departure Airport:</b> ${departureAirport || updatedFlight.departureAirport}</li></ul>`;
+        const info = await sendFlightUpdateEmail(subject, flightDetails, HTMLformattedFlightDetails, flights[index].passengers.map(p => p.email));
+        return res.json(
+            info ? { ...updatedFlight, emailInfo: info } : updatedFlight
+        );
     }
+
+    return res.json(updatedFlight);
 });
 
 // GET route to fetch all flights booked by a passenger
@@ -114,6 +138,5 @@ router.get('/passenger/:passengerId', (req, res) => {
     const passengerFlights = flights.filter(f => flightID.includes(f.id));
     res.json(passengerFlights);
 });
-
 
 module.exports = router;

@@ -2,12 +2,12 @@
     {
         "code": "JFK",
         "name": "John F. Kennedy International Airport",
-        "runways": ["4L", "4R", "13L", "13R", "22L", "22R", "31L", "31R"]
+        "runways": ["4L", "4R", "13L", "13R", "22L", "22R", "31L", "31R","7R"]
     },
     {
-        "code": "LAX",
+        "code": "LAX",  
         "name": "Los Angeles International Airport",
-        "runways": ["6L", "6R", "7L", "7R", "24L", "24R", "25L", "25R"]
+        "runways": ["6L", "6R", "7L", "7R", "24L", "24R", "25L", "25R","17R"]
     },
     {
         "code": "ORD",

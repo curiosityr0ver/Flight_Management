@@ -6,4 +6,8 @@ router.get('/', (req, res) => {
     res.json(airports);
 });
 
+
+
+
+
 module.exports = router;

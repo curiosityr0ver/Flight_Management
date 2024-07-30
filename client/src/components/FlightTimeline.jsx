@@ -153,7 +153,7 @@ const FlightTimeline = ({ flights, airport, date }) => {
 					"PPP"
 				)}`}</Text>
 				<ScatterChart
-					width={1000}
+					width={1150}
 					height={500}
 					margin={{
 						top: 20,

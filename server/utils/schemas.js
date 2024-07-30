@@ -6,6 +6,13 @@ const getRunwaysByAirportCode = (airportCode) => {
     return airport ? airport.runways : [];
 };
 
+const passengerSchema = Joi.object({
+    id: Joi.string().required(),
+    name: Joi.string().required(),
+    email: Joi.string().email().required(),
+    phone: Joi.string().pattern(/^\d{3}-\d{3}-\d{4}$/).required()
+});
+
 const flightSchema = Joi.object({
     id: Joi.string().required(),
     airline: Joi.string().required(),
@@ -31,13 +38,8 @@ const flightSchema = Joi.object({
     gate: Joi.string().required(),
     terminal: Joi.string().required(),
     delay: Joi.number().integer().min(0).required(),
-    status: Joi.string().valid('on-time', 'cancelled', 'delayed').required()
-});
-
-const passengerSchema = Joi.object({
-    id: Joi.string().required(),
-    name: Joi.string().required(),
-    flightId: Joi.string().required()
+    status: Joi.string().valid('on-time', 'cancelled', 'delayed').required(),
+    passengers: Joi.array().items(passengerSchema).required()
 });
 
 module.exports = {
