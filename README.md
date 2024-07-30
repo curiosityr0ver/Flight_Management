@@ -35,29 +35,17 @@ This project is a fully functional Air Traffic Control (ATC) system that allows 
     ```bash
     cd server
     npm install
+    npm start
     ```
 
 3. **Frontend Setup**:
     ```bash
     cd ../client
     npm install
-    ```
-
-### Running the Application
-
-1. **Start the backend server**:
-    ```bash
-    cd server
-    npm start
-    ```
-
-2. **Start the frontend server**:
-    ```bash
-    cd ../client
     npm run dev
     ```
 
-3. Open the application in your browser at `http://localhost:3000`.
+4. Open the application in your browser at `http://localhost:3000`.
 
 ### Environment Variables
 
@@ -65,7 +53,7 @@ To enable the email service, create an `.env` file in the `server` directory wit
 
 ```plaintext
 EMAIL_SERVICE=gmail
-EMAIL_USER=<email address of sender>
+EMAIL_USER=mehta.ishu14@gmail.com
 EMAIL_PASS=<app password>
 JWT_PRIVATE_KEY=secret
 ```
@@ -91,6 +79,10 @@ air-traffic-control/
 │   ├── app.js            # Express app setup
 │   ├── config.js         # Configuration file
 │   └── package.json      # Backend dependencies
+├── screenshots/          # Screenshots for README
+│   ├── screenshot1.png   # Example screenshot
+│   ├── screenshot2.png   # Example screenshot
+│   └── ...
 ├── README.md             # Project documentation
 └── .gitignore            # Ignored files
 ```
@@ -105,6 +97,22 @@ air-traffic-control/
 
 ### Flight Conflict Detection
 The system includes an algorithm to ensure that no two flights are scheduled to use the same runway within two minutes of each other for arrivals and departures. This prevents potential conflicts and ensures smoother airport operations.
+
+## Screenshots
+
+### Flight Table
+![Flight Table](./screenshots/screenshot1.png)
+
+### 24-Hour Timeline
+![24-Hour Timeline](./screenshots/screenshot2.png)
+
+### Flight Management
+![Flight Management](./screenshots/screenshot3.png)
+
+## Deployment
+
+The application is deployed and can be tested at the following link:
+[Air Traffic Control System Deployment](https://flight-management-five.vercel.app/)
 
 ## Contributing
 
@@ -123,4 +131,4 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-For any questions or inquiries, please contact [Your Name] at [your.email@example.com].
+For any questions or inquiries, please contact [Ishu Mehta] at [mehta.ishu14@gmail.com].
