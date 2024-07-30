@@ -1,4 +1,3 @@
-
 # Air Traffic Control System
 
 ## Project Overview
@@ -8,11 +7,13 @@ This project is a fully functional Air Traffic Control (ATC) system that allows 
 ## Features
 
 ### Frontend (Vite + React)
+
 - **Flight Table**: View, sort, and filter all flights.
 - **24-Hour Timeline**: Visual representation of all flights at a selected airport, categorized by runway.
 - **Flight Management**: Create and modify flight schedules.
 
 ### Backend (Express)
+
 - **Flight Management API**: Endpoints for creating, viewing, and modifying flights.
 - **Passenger Notification**: Email service to notify passengers of flight changes.
 - **Conflict Detection**: Algorithm to prevent scheduling conflicts on runways.
@@ -20,30 +21,34 @@ This project is a fully functional Air Traffic Control (ATC) system that allows 
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js and npm installed
 - Git installed
 
 ### Installation
 
 1. **Clone the repository**:
-    ```bash
-    git clone <repository_url>
-    cd air-traffic-control
-    ```
+
+   ```bash
+   git clone https://github.com/curiosityr0ver/Flight_Management
+   cd air-traffic-control
+   ```
 
 2. **Backend Setup**:
-    ```bash
-    cd server
-    npm install
-    npm start
-    ```
+
+   ```bash
+   cd server
+   npm install
+   npm start
+   ```
 
 3. **Frontend Setup**:
-    ```bash
-    cd ../client
-    npm install
-    npm run dev
-    ```
+
+   ```bash
+   cd ../client
+   npm install
+   npm run dev
+   ```
 
 4. Open the application in your browser at `http://localhost:3000`.
 
@@ -72,11 +77,10 @@ air-traffic-control/
 │   ├── vite.config.js    # Vite configuration
 │   └── package.json      # Frontend dependencies
 ├── server/               # Backend (Express)
-│   ├── controllers/      # Controllers for handling requests
-│   ├── models/           # Database models
+│   ├── data/             # Mock data models
 │   ├── routes/           # API routes
 │   ├── utils/            # Utility functions
-│   ├── app.js            # Express app setup
+│   ├── index.js            # Express app setup
 │   ├── config.js         # Configuration file
 │   └── package.json      # Backend dependencies
 ├── screenshots/          # Screenshots for README
@@ -90,24 +94,33 @@ air-traffic-control/
 ## Usage
 
 ### Admin Functionalities
+
 - **View Flights**: Access a comprehensive table of all flights.
 - **Sort and Filter**: Apply sorting and filtering to the flight table.
 - **Create Flights**: Add new flights to the schedule.
 - **Modify Flights**: Edit existing flights. Passengers will be notified via email of any changes.
 
 ### Flight Conflict Detection
+
 The system includes an algorithm to ensure that no two flights are scheduled to use the same runway within two minutes of each other for arrivals and departures. This prevents potential conflicts and ensures smoother airport operations.
 
 ## Screenshots
 
 ### Flight Table
-![Flight Table](./screenshots/screenshot1.png)
+
+![Flight Table](./screenshots/airportTable.png)
 
 ### 24-Hour Timeline
-![24-Hour Timeline](./screenshots/screenshot2.png)
 
-### Flight Management
-![Flight Management](./screenshots/screenshot3.png)
+![24-Hour Timeline](./screenshots/airportTable.png)
+
+### Create Flight
+
+![Flight Management](./screenshots/createFlight.png)
+
+### Create Flight
+
+![Flight Management](./screenshots/updateFlight.png)
 
 ## Deployment
 
