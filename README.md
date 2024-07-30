@@ -112,7 +112,7 @@ The system includes an algorithm to ensure that no two flights are scheduled to 
 
 ### 24-Hour Timeline
 
-![24-Hour Timeline](./screenshots/airportTable.png)
+![24-Hour Timeline](./screenshots/airportTimeline.png)
 
 ### Create Flight
 
