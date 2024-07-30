@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 10000 test.js",
-    "start": "nodemon app.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
