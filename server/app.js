@@ -1,6 +1,6 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
+const path = require('path');
 const flightsRouter = require('./routes/flights');
 const passengersRouter = require('./routes/passengers');
 const configRouter = require('./routes/config');
@@ -20,6 +20,10 @@ app.use('/passengers', passengersRouter);
 app.use('/config', configRouter);
 app.use('/user', userRouter);
 
+app.use(express.static(path.join(__dirname, 'public')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 
 const port = process.env.PORT || 3000;

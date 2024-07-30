@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
 	Box,
 	Table,
@@ -10,6 +11,7 @@ import {
 	Td,
 	Flex,
 	Heading,
+	Button,
 } from "@chakra-ui/react";
 import { useTable, useSortBy } from "react-table";
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
@@ -17,6 +19,7 @@ import { format, addMinutes } from "date-fns";
 import "./FlightTable.css";
 
 const FlightTable = ({ flights }) => {
+	const navigate = useNavigate();
 	const data = useMemo(() => flights, [flights]);
 
 	const columns = useMemo(
@@ -64,6 +67,21 @@ const FlightTable = ({ flights }) => {
 						  } (Delayed by ${delay} mins)`
 						: value.charAt(0).toUpperCase() + value.slice(1);
 				},
+			},
+			{
+				Header: "Modify",
+				accessor: "id",
+				Cell: ({ value }) => (
+					<Flex justify="center">
+						<Button
+							colorScheme="blue"
+							size="sm"
+							onClick={() => navigate(`/update/${value}`)}
+						>
+							Update
+						</Button>
+					</Flex>
+				),
 			},
 		],
 		[]

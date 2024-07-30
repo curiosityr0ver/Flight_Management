@@ -55,22 +55,33 @@ router.get('/:id', (req, res) => {
     }
 });
 
-router.post('/', authMiddleWare, (req, res) => {
-    const newFlight = req.body;
-    newFlight.id = generateFlightId();
+router.post('/', (req, res) => {
 
-    const { error } = flightSchema.validate(newFlight);
-    if (error) {
-        return res.status(400).json({ error: error.details[0].message });
+    try {
+        const newFlight = req.body;
+        newFlight.id = generateFlightId();
+        const { error } = flightSchema.validate(newFlight);
+        if (error) {
+            return res.status(400).json(error);
+        }
+        const conflictResult = validateFlight(newFlight);
+        if (conflictResult.conflict) {
+            return res.status(400).json(conflictResult);
+        }
+        flights.push(newFlight);
+        res.status(201).json(newFlight);
+
     }
-
-    flights.push(newFlight);
-    res.status(201).json(newFlight);
+    catch (error) {
+        console.log("error", error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
-router.put('/:id', authMiddleWare, async (req, res) => {
+router.put('/:id', async (req, res) => {
     const { arrivalAirport, departureAirport, delay, arrivalRunway, departureRunway, status, passengers } = req.body;
     const flightId = req.params.id;
+
     const currentFlight = flights.find(f => f.id === flightId);
 
     if (!currentFlight) {
@@ -88,6 +99,7 @@ router.put('/:id', authMiddleWare, async (req, res) => {
         passengers: passengers || currentFlight.passengers
     };
 
+
     if (delay && delay > 0) {
         const arrivalTime = new Date(currentFlight.arrivalTime);
         const departureTime = new Date(currentFlight.departureTime);
@@ -97,14 +109,19 @@ router.put('/:id', authMiddleWare, async (req, res) => {
             ...updatedFlight, arrivalTime, departureTime,
             status: 'delayed'
         };
-
     }
-
 
     const { error } = flightSchema.validate(updatedFlight);
+    console.log(error);
+
     if (error) {
-        return res.status(400).json({ error: error.details[0].message });
+        return res.json({
+            status: 400,
+            error: error.details[0].message
+        });
     }
+
+
 
     const conflictResult = validateFlight(updatedFlight);
     if (conflictResult.conflict) {
@@ -116,6 +133,10 @@ router.put('/:id', authMiddleWare, async (req, res) => {
     console.log("heree 3", delay);
 
     if (delay || status || arrivalAirport || departureAirport) {
+        const toSend = process.env.EMAIL_SERVICE ? true : false;
+        if (!toSend) {
+            return res.json(updatedFlight);
+        }
         const subject = `Flight ${flightId} Update`;
         const flightDetails = `Flight ${flightId} has been updated.\nStatus: ${status || updatedFlight.status},\nDelay: ${delay || updatedFlight.delay} minutes,\nArrival airport: ${arrivalAirport || updatedFlight.arrivalAirport},\nDeparture airport: ${departureAirport || updatedFlight.departureAirport}`;
         const HTMLformattedFlightDetails = `<h1>Flight ${flightId} Update</h1><p>Flight ${flightId} has been updated.</p><ul><li><b>Status:</b> ${status || updatedFlight.status}</li><li><b>Delay:</b> ${delay || updatedFlight.delay} minutes</li><li><b>Arrival Airport:</b> ${arrivalAirport || updatedFlight.arrivalAirport}</li><li><b>Departure Airport:</b> ${departureAirport || updatedFlight.departureAirport}</li></ul>`;

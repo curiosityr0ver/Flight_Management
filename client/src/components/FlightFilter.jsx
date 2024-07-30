@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Flex, Select, Button, Input, Heading } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,7 +13,7 @@ const FlightFilter = ({
 	setFilteredFlights,
 }) => {
 	const { airport, direction, date, search } = filters;
-	console.log(airports);
+	const navigate = useNavigate();
 
 	const handleFilterChange = (key, value) => {
 		setFilters((prevFilters) => ({
@@ -121,6 +122,9 @@ const FlightFilter = ({
 				/>
 				<Button onClick={clearFilters} colorScheme="teal" mb={2}>
 					Clear Filters
+				</Button>
+				<Button onClick={() => navigate("/create")} colorScheme="blue" mb={2}>
+					Add New Flight
 				</Button>
 			</Flex>
 		</Box>

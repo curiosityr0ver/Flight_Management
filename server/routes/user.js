@@ -22,6 +22,8 @@ const login = (req, res) => {
 
 
 router.post('/register', (req, res) => {
+    console.log('register');
+
     const { email, password, phone } = req.body;
     if (!email || !password || !phone) {
         res.status(400).json({ error: 'Email, password and phone are required' });
